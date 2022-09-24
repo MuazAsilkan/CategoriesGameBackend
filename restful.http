@@ -1,0 +1,22 @@
+
+### ODA OLUŞTURMAK İSTİYORUM
+POST http://localhost:4000/api/createroom
+Content-Type: application/json
+
+{
+    "times":60,
+    "tour":5,
+    "usernames":["muaz"],
+    "username":"muaz"
+}
+
+### ODAYA GİRMEK İSTİYORUM
+POST http://localhost:4000/api/loginroom
+Content-Type: application/json
+
+{
+    "key":"6325bfee19cdf55e894f9392",
+    "username":"muaz4"
+}
+
+ 
