@@ -4,8 +4,12 @@ const Room = require("../models/roomModel");
 
 router.post('/', async (req, res) => {
     try {
-        
-        const newRoom = new Room(req.body);
+        const roomSettings=req.body;
+        roomSettings.usernames=[{
+            name: roomSettings.username,
+            score:0
+        }]
+        const newRoom = new Room(roomSettings);
         const sonuc = await newRoom.save();
         
         /*const io=req.app.get("socketio");

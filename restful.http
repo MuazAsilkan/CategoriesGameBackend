@@ -19,4 +19,18 @@ Content-Type: application/json
     "username":"muaz4"
 }
 
+### Cevap veriyorum
+POST http://localhost:4000/api/room/tour
+Content-Type: application/json
+
+{
+    "key":"63302ce141fb624f42f468c1",
+    "username":"muaz",
+    "name":"muaz", 
+    "city":"manisa", 
+    "animal":"maymun", 
+    "plant":"manolya", 
+    "stuff":"masa"
+}
+
  

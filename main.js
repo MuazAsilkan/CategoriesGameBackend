@@ -16,19 +16,20 @@ const createRoomRouter = require('./routers/createRoomRouter');
 const loginRoomRouter = require("./routers/loginRoomRouter")
 const roomRouter = require("./routers/roomRouter");
 const userList = ["kişi", "kişicikler"];
-
-
+// ------------ Functions
+const endOfTour = require("./functions/endOfTour");
+const scoreCalculator = require('./functions/scoreCalculator');
+const currentTourCounter =require('./functions/currentTourCounter');
 
 
 io.on("connection", socket => {
     
     socket.on("joinroom", async (key, username) => {
         const room = await Room.findById(key);
-        if (room&&room.usernames.length > 9) {
+        if (room&&room.usernames.length > 10) {
             
         } else {
-            room.usernames.push(username);
-            const newroom = await Room.findByIdAndUpdate({ _id: key }, room);
+            
             socket.join(key);
             
             io.in(key).emit("joinroom", room);
@@ -59,12 +60,33 @@ io.on("connection", socket => {
         io.in(key).emit("joinroom", room);
     })
 
-    socket.on("finishtour", async (key, start) => {
+    socket.on("finishtour", async (key) => {
         const room = await Room.findById(key);
         room.finishedUser++;
         const newroom = await Room.findByIdAndUpdate({ _id: key }, room);
         io.in(key).emit("finishtour", room);
+        if (room.finishedUser===room.usernames.length) {
+            io.in(key).emit("endtour",room);
+        }
     })
+
+    socket.on("waitingforscore",async(key,answers)=>{
+        const room = await Room.findById(key);
+        const userCount=await endOfTour(key,answers);
+        //onst room1 = await Room.findById(key);
+        //room1.currentTour++;
+        //const newRoom=await Room.findByIdAndUpdate(key,room1);
+        console.log(userCount);
+        if (userCount===room.usernames.length) {
+            console.log("burayada girdi");
+            const scoreTable=await scoreCalculator(key);
+            const lastRoom=await currentTourCounter(key,scoreTable);
+            if (scoreTable===1) {
+                const room2=await Room.findById(key);
+                io.in(key).emit("scoretable",room2);
+            }
+        }
+    });
 })
 
 app.set("socketio", io);
